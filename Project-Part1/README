@@ -1,0 +1,163 @@
+#============================================================================================
+#	Name: Aniket Zamwar & Abhishek Prabhudesai
+#	USC ID: 1488-5616-98 &  4722-5949-88
+#	Aludra/Nunki ID: zamwar 
+#	Aludra/Nunki ID: prabhude
+#	email: zamwar@usc.edu	
+#	       prabhude@usc.edu
+#	Submitted on 25th March, 2012
+#	Project: WarmUp Project #3 PART#1 - CSCI 551 Spring 2012
+#	Instructor: Bill Cheng
+#============================================================================================
+
+#==============================================
+#	How To Compile & Source Files
+#==============================================
+
+-----------------------------------------------------------
+- Compile - Create executable named 'sv_node'
+-----------------------------------------------------------
+> make
+
+-----------------------------------------------------------
+- Project Files -
+-----------------------------------------------------------
+    
+1.  headers.h                 	- Consits of all HEADER Includes needed in the project.
+2.  systemDataStructures.h	- The Data Structures likes Connection Details with each Nodes, Message Cache, function declaration for the same, Locks, CVs and 					  Variables needed at each node.
+
+3.  ntwknode.h       		- Consists of structures needed to store node Info like: <structure to store all INI information>.
+4.  iniparser.h               	- Function Declarations to parse INI.
+4.  iniparser.cpp             	- Parses the INI File and stores all the information in a structure.
+5.  ntwknode.cpp              	- Using ntwknode.h structures, parses INI File and stores all the information needed.
+6.  uoid.cpp			- Creates uniqie uoid for parameters passed to it, using SHA.
+
+8.  commonFunctions.cpp       	- Functions used all accross the project are defined here - logging, clearing, MAP Traversals.
+9.  checkThread.cpp           	- Thread Function is defined in this file to send CHECK Messages at BEACON NODES.
+
+10. reader.cpp			- Reader Thread to read and parse incoming character Stream data for each node.
+11. writer.cpp			- Reader Thread to convert structured data to character stream and send to other connected nodes.
+
+12. keyboardThread.h          	- declarations needed in the keyboard thread neeeded in the project.
+13. keyboardThread.cpp       	- keyboard thread functionality has been implemented in this file.
+
+14. nonBeaconNode.h           	- declarations of functions and structures needed at Non Beacon Node.
+15. nonBeaconDispatcher.cpp   	- Dispatcher at Non Beacon to process incoming messages and handle requests, forward it on proper routes or use the message if it 						is a response.
+16. nonBeaconTimerThread.cpp  	- Timer thread to handle the inactivity of connections in nonbeacon, message cache time outs and clean up handled in it.
+
+17. message.h                 	- all types of messages used in the project are #defined here
+18. messageStructures.h       	- THE structure for Header Message and structures for all types of message body are declared here in this file.
+19. messageHandlers.cpp       	- Functions: Creation of Message, Convertion to Character Stream to send to other nodes, Character Stream to Structure for 	                             incoming messages.
+
+20. nonBeaconNode.cpp         	- Non Beacon Node startup Implementation of Join/use of Init to connect to beacon/ checking Min Neighbors.
+
+21. beaconNode.h              	- Beacon Node Information and functions for startup implementeation declared here.
+22. beaconNode.cpp            	- Forming Mesh and holding the mesh have been implemented here.
+23. dispatcher.cpp            	- Dispatcher @ BEACON to process incoming and ougoing messages/forward/responses.
+24. beaconTimerThread.cpp     	- Timer node @ BEACON to handle cache, message timeouts and connections activity.
+
+25. Makefile			- Source Code Compilation rules for all header and source Files, Compiles the executable named 'sv_node'
+26. README			- Project Description and Information
+
+-----------------------------------------------------------
+- Clean - Cleans all the .o and non-source files created
+-----------------------------------------------------------
+> make clean
+
+
+#==============================================#==============================================#==============================================
+#	Project DESIGN
+#==============================================#==============================================#==============================================
+
+Project Design-1:
+	
+	
+	This is how blocks have been designed at each node:
+	++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+					       ____________________
+	 				       |                  |
+					       |   Message Cache  |						
+					       |________| |_______| 	
+		____					| |		       _____
+	 >>>>>>	____|--> Reader-1 -\			| |	        /---> |_____ --->>> Writer 1
+		____		    \	   _____________| |_________   /          _____
+	 >>>>>>	____|--> Reader-2 ------>>>________ Dispatcher_______ -->>-----> |_____ --->>> Writer 2
+		____  		    /    			       \       _____
+	 >>>>>>	____|--> Reader-3 -/ 				        \---> |_____ --->>> Writer 3
+									
+
+
+         ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
++ Project has been designed in c as well as c++ programming constructs.
++ mutex and condition varialbe have been used to provide exclusive access of the queue to server and customers.
++ POSIX Threads have been used to implement multi-threading.
++ All test cases have been verified and checked before submission and were executed successfully without any known issues.
++ Nounexpected long blocking of the program or race conditions have been experienced in the project implementation.
++ read and write of data at beacons and non-beacons have been implemented byte-by-byte, i.e. only one byte is sent and one byte is received.
+Character Stream implementation has been done.
+      
+Other Key Points:
+- All the Design Specifications given in the Project Spec have been followed in the implementation.
+- pthreads are used in server module to handle the requests from multiple servers.
+- To avoid race conditions, pthread mutex and signals are used on large scale in the project implementation to share variables between threads at a node.
+- Signal handling has been done for SIGINT, SIGUSR1 and SIGPIPE to handle signals in the program execution.
+- If entry is not found in the INI file, then the program uses the default values.
+- malloc is used to allocate dynamic memory.
+- C++ STL libraries MAP, QUEUE have been used on large scale for all the implementation of queues to store, receive and send data accross the network
+formed between the nodes.
+- STL MAP is used to maintain a MESSAGE CACHE in the program implementation using UOID as a key.
+
+
+#==============================================#==============================================#==============================================
+#	KNOWN BUGS
+#==============================================#==============================================#==============================================
+
+- There are no known bugs in the implementation of the project, all the logic has been tested for all possible cases mentioned on grading guidelines.
+*NOTE: 
+	1. Nunki is a real time operating system, so sometimes the sleep used by the program for some logical behaviour is not experienced for the same amount of time and so it may lead to variations in the output.
+	2. malloc and free is used in the project to allocate memory space and free the memory, sometimes malloc does not return the amount of memory.
+		This may lead to segmentation Fault.
+	3. Please include following lines to systemDataStructures.h in case of tests not running/ not giving expected output.
+
+	#define DEBUGGING_MEMORY_CORRUPTION
+    	#ifdef DEBUGGING_MEMORY_CORRUPTION
+    	#ifdef free
+    	#undef free
+   	#endif
+    	#define free
+    	#endif
+
+- All the provided grading guidelines were tested with the execution of the project and the output received was successfully compared with the expected output
+provided in the guidelines.
+
+#==============================================#==============================================#==============================================
+#	DEVIATION FROM Spec
+#==============================================#==============================================#==============================================
+Specs mentioned in the Project WebPage and comments provided by professor during class and via mail as well as information mentioned in presentation have been followed for project's implementation. There is no deviation from the logical requirement of the system in the specs.
+
+#==============================================#==============================================#==============================================
+#	<RESPONSIBILITIES OF MEMBERS>
+#==============================================#==============================================#==============================================
+Design of the project was done before starting coding, so that both the members are on the same road.
++ Aniket: Designed + Coded Message Handling Section to be sent and received, Queuing of Messages for Beacons, Beacon Timer, Message Caching at Beacon, Beacon 		    Dispatcher.
+
++ Abhishek: Designed and implemented INI Parsing program, Non Beacon Timer, Non Beacon Startup + code for initial participation into network, 
+		Beacon Starup Code,
+
+#==============================================#==============================================#==============================================
+#	References And Credits
+#==============================================#==============================================#==============================================
+	#-CREDITS-#
+	+ Code for Functions InitRandom and GetInterval were used as it is without any changes to them as provided on the Project Spec Website.
+		http://merlot.usc.edu/cs551-s12/projects/warmup2.html#code 
+
+	#-REFERENCES-#
+	1. C/Ansi C - http://www.java2s.com/Code/C/CatalogC.htm
+	2. POSIX Threads: http://www.yolinux.com/TUTORIALS/LinuxTutorialPosixThreads.html
+			  https://computing.llnl.gov/tutorials/pthreads/
+	
+	None of the source code was directly copied from anywhere, it was used for understanding and the code designed and was coded by self.
+	UOID Creation Function was used as provided by professor on the Course Website with minute modification as required.
+
+#========================================================================END========================================================================#

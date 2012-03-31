@@ -1,0 +1,10 @@
+=====================================================================================================
+								Computer Communications Project (CS 551)
+=====================================================================================================
+
+Language of Programming: C/C++
+Tested on: Solaris server @ USC
+
+Problem statement: http://merlot.usc.edu/cs551-s12/projects/final.html
+
+In this project I developed a Peer-to-Peer file sharing system (like Freenet).

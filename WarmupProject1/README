@@ -1,0 +1,66 @@
+==================================
+|	Name : Abhishek Pabhudesai	 |
+|	USC ID : 4722594988			 |
+|	username: prabhude			 |
+==================================
+
+==================================
+	Warmup Project #1
+==================================
+
+==================================
+	Design Decisions
+==================================
+
++ 	For this project we were supposed to create a server that can handle multiple requests in parallel.
+	Thus the server in this project is multi threaded. For this I made use of the POSIX Threads.
+
++	The client and the server are implemented as per the specifications. For message sending the client and the server
+	use a buffer in which the data to be sent is copied. This buffer is then sent one byte at a time to the server.
+	
++	If the client gets a reply that is greater than 512 bytes then it will print the all the data received from the server
+	even though the response is incorrect and will print a message saying "Response received is Incorrect".
+	
++	If the server receives a client request that has the request data > 256 bytes then it accepts the entire data but 
+	does not process it and sends a ALL_FAIL response to the client.
+
+==================================
+	List of Files
+==================================
+
++	server.h	-	header file for the server
++	server.c	- 	server code
++	client.h	-	header file for the client
++ 	client.c	-	client code
++	messageFunctions.h	-	header file for the common functions for client and server
++	messageFunctions.c	- 	file that has some common functions that both client and server use
++	Makefile	-	makefile for the project
++	README	-	document specifying details of the project
+
+==================================
+	Compiling the code
+==================================
+
++	Compile the entire code for client, messageFunctions and server
+	make
++	Compile the code for client and messageFunctions
+	make client
++	Compile the code for server and messageFunctions
+	make server
++	Remove all the executables and .o files
+	make clean
+
+==================================
+	Known Bugs
+==================================
+
++	There are no known bugs. The client and the server work correctly for all the tests specified in the grading guidelines.
+
+==================================
+	References
+==================================
+
++	Beej's Guide to Network Programming Using Internet Sockets : http://beej.us/guide/bgnet/output/html/singlepage/bgnet.html
++	Makefie tutorial : http://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
++	POSIX Threads Programming : https://computing.llnl.gov/tutorials/pthreads/
++	Signal Handling in Linux : http://www.alexonlinux.com/signal-handling-in-linux

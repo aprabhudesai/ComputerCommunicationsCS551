@@ -1,0 +1,68 @@
+==================================
+|	Name : Abhishek Pabhudesai	 |
+|	USC ID : 4722594988			 |
+|	username: prabhude			 |
+==================================
+
+==================================
+	Warmup Project #2
+==================================
+
+==================================
+	Design Decisions
+==================================
+
++ 	For this project we were supposed to create multi-threaded program that has a thread that creates customers and 2 threads (server)
+	that serve the customers.
+
++	The customer thread (file name - arrivalprocess) and the server are implemented as per the specifications. The implementation is done as follows:
+	There is a main (parent) thread that creates 3 child threads - 1 customer creation thread and 2 server threads. It then waits for these threads
+	to complete their processing and return. After this it calculates the statistics for the entire simulation and displays them on the screen.
+	
++	This project uses a queue data structure which is a shared resource between customer creation thread and the servers. Thus it is protected by a
+	mutex. When a new customer gets created, the customer creation thread broadcasts on the condition variable thus waking up both the servers.
+	These servers then compete to obtain the lock and only one of them gets it so the other one goes to sleep waiting for another signal.
+	
++	When a server is serving the last customer, the 2nd server may be in a wait as the queue is empty. Thus the 1st server signals the 2nd server that
+	its time to quit as all customers have been served.
+
+==================================
+	List of Files
+==================================
+
++	centralserver.h		-	header file for all the variables used in the project
++	centralserver.cpp	- 	contains the parent process that creates 3 child threads
++	arrivalprocess.cpp	-	contains the customer creation function
++ 	server.cpp			-	contains the functions that process the customers in the queue
++	Makefile			-	makefile for the project
++	README				-	document specifying details of the project
+
+==================================
+	Compiling the code
+==================================
+
++	Compile the entire code for centralserver, arrivalprocess and server into a executable "mm2"
+	make
++	Compile the code and create object file for server
+	make server.o
++	Compile the code and create object file for arrivalprocess
+	make arrivalprocess.o
++	Compile the code and create object file for centralserver
+	make centralserver.o
++	Remove all the executables, *~ and *.o files
+	make clean
+
+==================================
+	Known Bugs
+==================================
+
++	There are no known bugs. The customer creator and the servers work correctly for all the tests specified in the grading guidelines.
+
+==================================
+	References
+==================================
+
++	Makefie tutorial : http://www.cs.umd.edu/class/fall2002/cmsc214/Tutorial/makefile.html
++	POSIX Threads Programming : https://computing.llnl.gov/tutorials/pthreads/
++	Signal Handling in Linux : http://www.alexonlinux.com/signal-handling-in-linux
++	Queue STL : http://www.cplusplus.com/reference/stl/queue/

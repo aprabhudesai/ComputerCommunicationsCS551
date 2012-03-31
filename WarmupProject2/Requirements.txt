@@ -1,0 +1,29 @@
+Requirements as per spec:
+
+1.	Q1 with a mutex
+2.	default value for lambda is 0.5 (customers per second) and the default value for mu is 0.35 (customers per second)
+3.	-s option: only S1 present; S2 turned off i.e. M/M/1 system an not M/M/2
+4.	-seed option: l_seed parameter for InitRandom() function. seed value >=0. default = 0.
+5.	-size option: size of Q1. default = 5.
+6.	-n option: # of customers to arrive. Default = 20.
+7.	-d option: probability dist to use - exp | det. Default is -d exp.
+8.	-t option: trace file. Ignore -lambda -mu -seed -n -d cmdline options.
+9.	printf ????????.???ms: cn dropped, if cn dropped due to buffer overflow.
+	(????.... is the time cn was dropped)
+10.	departs line should be printed in one single line (unlike shown in browser).
+11.	to printf real values use "%.6f".
+12.	timestamp in the beginning of a line of trace output must be in milliseconds with 8 digits (zero-padded) before the decimal point and 3 digits (zero-padded) after the decimal point.
+13.	If n is the number of sample, this mean that you should divide things by n (and not n-1).
+14.	unit for time related statistics must be in seconds.
+15.	round inter-arrival and service times to the nearest millisecond using the round() macro above before GetInterval() returns.
+16.	w = ln(1-r) / (-m)   where ln() is the natural logarithm function.
+
+
+Statistics:
+
+1.	time spent in system: difference between the time the customer departed from a server and the time that customer arrived.
+2.	drop probability: customers dropped because Q1 was full divided by the total number of customers that was produced by the arrival process.
+
+Functions to use:
+
+1.	gettimeofday() to get time information with a microsecond resolution.

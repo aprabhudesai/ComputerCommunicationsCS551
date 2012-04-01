@@ -100,21 +100,6 @@ void reader(void *param){
 			FD_ZERO(&readset);
 			FD_SET(sockDesc, &readset);
 
-			pthread_mutex_lock(&connectionDetailsObj->connectionLock);
-			if(connectionDetailsObj -> notOperational == 1){
-				// delete all the allocated memory to handled which will not be handled by timer or Cache
-
-				connectionDetailsObj->threadsExitedCount++;
-				pthread_mutex_unlock(&connectionDetailsObj->connectionLock);
-				if(messageHeaderStream!=NULL)
-				{
-					free(messageHeaderStream);
-					messageHeaderStream = NULL;
-				}
-				goto OUT;
-			}
-			pthread_mutex_unlock(&connectionDetailsObj->connectionLock);
-
 			select_return = select(highSock+1, &readset, (fd_set *) 0,(fd_set *) 0, &tv);
 			pthread_mutex_lock(&connectionDetailsObj->connectionLock);
 
@@ -127,7 +112,7 @@ void reader(void *param){
 				if(messageHeaderStream!=NULL)
 				{
 					free(messageHeaderStream);
-
+					messageHeaderStream = NULL;
 				}
 				goto OUT;
 			}
@@ -359,6 +344,13 @@ void reader(void *param){
 				messageStruct->timestamp = mysystime;
 				messageStruct -> connectedNeighborsMapKey = portAndHostName;
 
+				free(messageStruct->message);
+				free(messageStruct->messageHeader);
+				messageStruct->message=NULL;
+				messageStruct->messageHeader=NULL;
+				messageBodyStream = NULL;
+				messageHeaderStream = NULL;
+
 				pthread_mutex_lock(&eventDispatcherQueueLock);
 				eventDispatcherQueue.push(messageStruct);
 				pthread_cond_signal(&eventDispatcherQueueCV);
@@ -375,8 +367,15 @@ void reader(void *param){
 			mysystime = time(NULL);
 			messageStruct->timestamp = mysystime;
 			messageStruct -> connectedNeighborsMapKey = portAndHostName;
-			pthread_mutex_lock(&eventDispatcherQueueLock);
 
+			free(messageStruct->message);
+			free(messageStruct->messageHeader);
+			messageStruct->message=NULL;
+			messageStruct->messageHeader=NULL;
+			messageBodyStream = NULL;
+			messageHeaderStream = NULL;
+
+			pthread_mutex_lock(&eventDispatcherQueueLock);
 			eventDispatcherQueue.push(messageStruct);
 			pthread_cond_signal(&eventDispatcherQueueCV);
 			pthread_mutex_unlock(&eventDispatcherQueueLock);

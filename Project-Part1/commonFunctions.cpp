@@ -160,9 +160,9 @@ void scanAndEraseConnectedNeighborsMap(int nodetype)
 					//ReConnectToBeaconNode(cdTemp,connectedNeighborsMapIter->first);
 
 				}
-				else if((cd->notOperational == 1 && cd->threadsExitedCount >= 1) ||
-						(cd->isJoinConnection == 1 && cd->threadsExitedCount >= 1) ||
-						(cd->notOperational == 1 && cd->threadsExitedCount >= 1 &&
+				else if((cd->notOperational == 1 && cd->threadsExitedCount >= 2) ||
+						(cd->isJoinConnection == 1 && cd->threadsExitedCount >= 2) ||
+						(cd->notOperational == 1 && cd->threadsExitedCount >= 2 &&
 								!checkNodeType(cd->wellKnownPort)))
 				{
 					struct connectionDetails * tempcd = connectedNeighborsMapIter->second;

@@ -100,7 +100,9 @@ char* createHeader(struct message* mHeader){
 	char *mHeaderStream;
 	char *mHeaderStreamPtr;
 	
+	mHeaderStream = NULL;
 	mHeaderStream = (char *)malloc(27);
+	memset(mHeaderStream,0,27);
 	mHeaderStreamPtr = mHeaderStream; 
 			
 	memcpy(mHeaderStream,&mHeader-> messType,1);
@@ -195,7 +197,9 @@ char *createJoinMessage(struct joinMessage *ptr){
 	char *buffer;
 	char *bufferPtr;
 	
+	buffer = NULL;
 	buffer = (char*)malloc(ptr -> dataLength);
+	memset(buffer,0,ptr -> dataLength);
 	bufferPtr = buffer;
 	
 	net_hostLocation = (uint32_t)htonl((uint32_t)ptr -> hostLocation);
@@ -227,7 +231,6 @@ struct joinMessage* parseJoinMessage(char *buffer,uint32_t dataLength){
 	ptr -> hostPort = (uint16_t)htons((uint16_t)host_hostPort);
 	buffer+=2;
 
-	//ptr -> hostName = (char*)malloc(ptr -> dataLength - 5);
 	memcpy(ptr-> hostName,buffer,ptr -> dataLength - 6);
 	ptr-> hostName[ptr -> dataLength - 6] = '\0';
 	
@@ -258,15 +261,8 @@ void printjoinRespMessage(struct joinRespMessage* ptr){
 }
 
 struct joinRespMessage * createJoinRespMessage(struct joinMessage* joinMessageObj, struct message *ptr,struct NodeInfo *ndInfoTemp){
-	//unsigned char uoid[21];
-	//uint32_t distance;
-	//uint16_t hostPort;
-	//char hostName[256];
-	//uint32_t dataLength;
 
 	struct joinRespMessage * joinRespMessageObj = createjoinRespMessageStruct();
-
-	//strcpy(reinterpret_cast<char*>(joinRespMessageObj -> uoid),reinterpret_cast<char*>(ptr -> uoid));
 
 	int i = 0;
 	while(i<20)
@@ -293,7 +289,10 @@ char *createJoinRespMessage(struct joinRespMessage *ptr){
 
 	char* buffer;
 	char *bufferPtr;
+
+	buffer = NULL;
 	buffer = (char*)malloc(ptr -> dataLength);
+	memset(buffer,0,ptr->dataLength);
 	bufferPtr = buffer;
 	
 	memcpy(buffer,ptr -> uoid,20);
@@ -333,7 +332,6 @@ struct joinRespMessage* parseJoinRespMessage(char *buffer,uint32_t dataLength){
 	ptr -> hostPort = (uint16_t)htons((uint16_t)host_hostPort);
 	buffer+=2;
 
-	//ptr -> hostName = (char *)malloc(ptr -> dataLength - 25);
 	memcpy(ptr -> hostName,buffer,ptr -> dataLength - 26);
 	ptr -> hostName[ptr -> dataLength - 26] = '\0';
 	
@@ -376,7 +374,9 @@ char* createHelloMessage(struct helloMessage* ptr){
 	char *bufferPtr;
 	//printHelloMessage(ptr);
 
+	buffer = NULL;
 	buffer = (char *)malloc(ptr -> dataLength);
+	memset(buffer,0,ptr->dataLength);
 	bufferPtr = buffer;	
 	
 	net_hostPort = (uint16_t)htons((uint16_t)ptr -> hostPort);
@@ -399,7 +399,6 @@ struct helloMessage* parseHelloMessage(char *buffer,uint32_t dataLength){
 	ptr -> hostPort = (uint16_t)htons((uint16_t)host_hostPort);
 	buffer+=2;
 	
-	//ptr -> hostName = (char *)malloc(ptr -> dataLength - 1);
 	memcpy(ptr -> hostName,buffer,ptr -> dataLength - 2);
 	ptr -> hostName[ptr -> dataLength - 2] = '\0';
 	
@@ -450,7 +449,9 @@ char* createNotifyMessage(struct notifyMessage *ptr){
 	//2: unexpected kill signal received
 	//3: self-restart
 	char *buffer;
+	buffer = NULL;
 	buffer = (char *)malloc(ptr -> dataLength);
+	memset(buffer,0,ptr->dataLength);
 
 	memcpy(buffer,&ptr -> errorCode,1);
 	return buffer;
@@ -520,7 +521,10 @@ char* createCheckRespMessage(struct checkRespMessage *ptr){
 	// char checkMsgHeaderUOID[21];
 	
 	char *buffer;
+
+	buffer = NULL;
 	buffer = (char *)malloc(21);
+	memset(buffer,0,21);
 	memcpy(buffer,ptr -> checkMsgHeaderUOID,20);
 	buffer[21] = '\0';
 	
@@ -577,7 +581,9 @@ struct statusMessage* createStatus(uint8_t temp_statusType){
 char* createStatusMessage(struct statusMessage *ptr){
 
 	char *buffer;
+	buffer = NULL;
 	buffer = (char *)malloc(ptr -> dataLength);
+	memset(buffer,0,ptr->dataLength);
 
 	memcpy(buffer,&ptr->statusType,1);
 
@@ -703,7 +709,9 @@ char* createStatusRespMessage(struct statusRespMessage *ptr){
 
 	char *buffer;
 	char *bufferPtr;
+	buffer = NULL;
 	buffer = (char *)malloc(ptr -> dataLength);
+	memset(buffer,0,ptr->dataLength);
 	bufferPtr = buffer;
 
 	if(ptr->statusType == 0x01){
